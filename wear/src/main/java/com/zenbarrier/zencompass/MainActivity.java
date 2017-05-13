@@ -1,8 +1,12 @@
 package com.zenbarrier.zencompass;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,7 +22,7 @@ public class MainActivity extends WearableActivity {
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private TextView mClockView;
-
+    private SensorManager mSensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,12 @@ public class MainActivity extends WearableActivity {
         mTextView = (TextView) findViewById(R.id.text);
         mClockView = (TextView) findViewById(R.id.clock);
 
-
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if(mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+            Log.d("main", "has magnetic field");
+        }else{
+            Log.d("main", "no magnetic field");
+        }
     }
 
     @Override
