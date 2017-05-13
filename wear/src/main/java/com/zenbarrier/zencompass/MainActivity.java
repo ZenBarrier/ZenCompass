@@ -8,8 +8,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +24,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private TextView mClockView;
+    private ImageView mCompassImage;
     private SensorManager mSensorManager;
     private Sensor mCompass;
     private Sensor mAccelerometer;
@@ -33,7 +34,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private float[] mIdentityMatrix;
     private float[] mRotationMatrix;
     private float[] mOrientationMatrix;
-    private double mRotationDegrees = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
         mClockView = (TextView) findViewById(R.id.clock);
+        mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCompass = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -114,8 +115,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         SensorManager.getRotationMatrix(mRotationMatrix, mIdentityMatrix, mAccelerometerData, mMagneticData);
         SensorManager.getOrientation(mRotationMatrix, mOrientationMatrix);
         float rotationRadian = mOrientationMatrix[0];
-        mRotationDegrees = Math.toDegrees(rotationRadian);
-        mTextView.setText(mRotationDegrees+"");
+        double mRotationDegrees = Math.toDegrees(rotationRadian);
+        mCompassImage.setRotation((float) mRotationDegrees);
+        mTextView.setText(String.valueOf(mRotationDegrees));
     }
 
     @Override
