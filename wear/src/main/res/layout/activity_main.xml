@@ -8,19 +8,15 @@
     tools:context="com.zenbarrier.zencompass.MainActivity"
     tools:deviceIds="wear">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_world"
-        app:layout_box="all" />
-
     <ImageView
         android:id="@+id/imageView_compass"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@android:drawable/arrow_up_float" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_compass_background_rotate"
+        android:contentDescription="@string/description_compass_background" />
 
     <TextView
         android:id="@+id/clock"
@@ -28,6 +24,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:textColor="@android:color/white"
+        app:layout_box="all" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="SW"
         app:layout_box="all" />
 
 </android.support.wearable.view.BoxInsetLayout>

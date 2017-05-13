@@ -116,8 +116,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         SensorManager.getOrientation(mRotationMatrix, mOrientationMatrix);
         float rotationRadian = mOrientationMatrix[0];
         double mRotationDegrees = Math.toDegrees(rotationRadian);
-        mCompassImage.setRotation((float) mRotationDegrees);
-        mTextView.setText(String.valueOf(mRotationDegrees));
+        mCompassImage.setRotation((float) -mRotationDegrees);
+        mTextView.setText(String.valueOf((int)((mRotationDegrees >= 0 ? 0 : 360)+mRotationDegrees)));
     }
 
     @Override
