@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
+import android.support.wearable.view.drawer.WearableDrawerLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("hh:mm a", Locale.US);
 
-    private BoxInsetLayout mContainerView;
+    private WearableDrawerLayout mContainerView;
     private TextView mTextRotation;
     private TextView mClockView;
     private ImageView mCompassImage;
@@ -41,7 +42,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         setContentView(R.layout.activity_main);
         setAmbientEnabled();
 
-        mContainerView = (BoxInsetLayout) findViewById(R.id.container);
+        mContainerView = (WearableDrawerLayout) findViewById(R.id.container);
         mTextRotation = (TextView) findViewById(R.id.textView_rotation);
         mClockView = (TextView) findViewById(R.id.clock);
         mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
