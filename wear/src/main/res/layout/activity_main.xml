@@ -34,8 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:text="SW"
-        app:layout_box="all" />
+        android:textColor="@color/white"
+        app:layout_box="all"
+        tools:text="SW" />
 
     <android.support.wearable.view.drawer.WearableActionDrawer
         android:id="@+id/bottom_action_drawer"

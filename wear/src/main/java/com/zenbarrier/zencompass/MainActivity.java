@@ -27,6 +27,7 @@ public class MainActivity extends WearableActivity implements
         WearableActionDrawer.OnMenuItemClickListener{
 
     private static final String KEY_PREF_IS_MILITARY_TIME = "KEY_PREF_IS_MILITARY_TIME";
+    private static final String KEY_PREF_IS_SHOWING_DEGREES = "KEY_PREF_IS_SHOWING_DEGREES";
     private SimpleDateFormat mAmbientDateFormat;
     private static final long SHOW_DRAWER_TIME = 3000;
 
@@ -81,7 +82,7 @@ public class MainActivity extends WearableActivity implements
     private void setMenuItems(){
 
         MenuItem clockMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_clock_format);
-        if(mSharedPreferences.getBoolean("KEY_PREF_IS_MILITARY_TIME", false)){
+        if(mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false)){
             clockMenuItem.setTitle("Ambient Clock 24h Mode");
             mAmbientDateFormat =
                     new SimpleDateFormat("HH:mm", Locale.US);
@@ -89,6 +90,14 @@ public class MainActivity extends WearableActivity implements
             clockMenuItem.setTitle("Ambient Clock 12h Mode");
             mAmbientDateFormat =
                     new SimpleDateFormat("hh:mm a", Locale.US);
+        }
+        MenuItem degreeMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_degree_show);
+        if(mSharedPreferences.getBoolean(KEY_PREF_IS_SHOWING_DEGREES, false)){
+            degreeMenuItem.setTitle("Hide Degrees");
+            mTextRotation.setVisibility(View.VISIBLE);
+        }else{
+            degreeMenuItem.setTitle("Show Degrees");
+            mTextRotation.setVisibility(View.GONE);
         }
     }
 
@@ -159,7 +168,9 @@ public class MainActivity extends WearableActivity implements
             mContainerView.setBackgroundColor(Color.DKGRAY);
             mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             mClockView.setVisibility(View.GONE);
-            mTextRotation.setVisibility(View.VISIBLE);
+            if(mSharedPreferences.getBoolean(KEY_PREF_IS_SHOWING_DEGREES, false)) {
+                mTextRotation.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -193,6 +204,11 @@ public class MainActivity extends WearableActivity implements
             case R.id.menu_clock_format:
                 boolean clockFormat = mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false);
                 mSharedPreferences.edit().putBoolean(KEY_PREF_IS_MILITARY_TIME, !clockFormat).apply();
+                setMenuItems();
+                break;
+            case R.id.menu_degree_show:
+                boolean isShowingDegrees = mSharedPreferences.getBoolean(KEY_PREF_IS_SHOWING_DEGREES, false);
+                mSharedPreferences.edit().putBoolean(KEY_PREF_IS_SHOWING_DEGREES, !isShowingDegrees).apply();
                 setMenuItems();
                 break;
             case R.id.menu_close:
