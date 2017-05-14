@@ -6,6 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_grey"
     tools:context="com.zenbarrier.zencompass.MainActivity"
     tools:deviceIds="wear">
 
@@ -16,6 +17,7 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
+        android:onClick="showDrawerHint"
         android:src="@drawable/ic_compass_background_rotate"
         android:contentDescription="@string/description_compass_background" />
 
@@ -34,5 +36,12 @@
         android:layout_gravity="center"
         tools:text="SW"
         app:layout_box="all" />
+
+    <android.support.wearable.view.drawer.WearableActionDrawer
+        android:id="@+id/bottom_action_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:show_overflow_in_peek="true"
+        app:action_menu="@menu/action_drawer_menu"/>
 
 </android.support.wearable.view.drawer.WearableDrawerLayout>

@@ -1,14 +1,17 @@
 package com.zenbarrier.zencompass;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.BoxInsetLayout;
+import android.support.wearable.view.drawer.WearableActionDrawer;
 import android.support.wearable.view.drawer.WearableDrawerLayout;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,10 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends WearableActivity implements SensorEventListener{
+public class MainActivity extends WearableActivity implements
+        SensorEventListener,
+        WearableActionDrawer.OnMenuItemClickListener{
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("hh:mm a", Locale.US);
+    private static final long SHOW_DRAWER_TIME = 3000;
 
     private WearableDrawerLayout mContainerView;
     private TextView mTextRotation;
@@ -29,6 +35,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private SensorManager mSensorManager;
     private Sensor mCompass;
     private Sensor mAccelerometer;
+    private WearableActionDrawer mActionDrawer;
+    private Handler mDrawerHandler;
 
     private float[] mMagneticData;
     private float[] mAccelerometerData;
@@ -43,9 +51,14 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         setAmbientEnabled();
 
         mContainerView = (WearableDrawerLayout) findViewById(R.id.container);
+
+        mDrawerHandler = new Handler();
+
         mTextRotation = (TextView) findViewById(R.id.textView_rotation);
         mClockView = (TextView) findViewById(R.id.clock);
         mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
+        mActionDrawer = (WearableActionDrawer) findViewById(R.id.bottom_action_drawer);
+        mActionDrawer.setOnMenuItemClickListener(this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCompass = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -58,11 +71,30 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         mOrientationMatrix = new float[3];
     }
 
+    public void showDrawerHint(View view) {
+        mActionDrawer.peekDrawer();
+        mDrawerHandler.removeCallbacksAndMessages(null);
+        if (mActionDrawer.isClosed()) {
+            mDrawerHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mActionDrawer.isPeeking()) {
+                        mActionDrawer.closeDrawer();
+                    }
+                }
+            }, SHOW_DRAWER_TIME);
+        }else if(mActionDrawer.isPeeking()){
+            mActionDrawer.closeDrawer();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mCompass, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        showDrawerHint(null);
     }
 
     @Override
@@ -102,7 +134,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
             mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
-            mContainerView.setBackground(null);
+            mContainerView.setBackgroundColor(Color.DKGRAY);
             mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             mClockView.setVisibility(View.GONE);
             mTextRotation.setVisibility(View.VISIBLE);
@@ -130,5 +162,19 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()){
+            case R.id.menu_clock_format:
+                break;
+            case R.id.menu_close:
+                mActionDrawer.closeDrawer();
+                break;
+        }
+
+        return true;
     }
 }
