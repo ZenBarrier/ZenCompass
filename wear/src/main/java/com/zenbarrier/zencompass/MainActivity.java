@@ -1,6 +1,7 @@
 package com.zenbarrier.zencompass;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -8,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.drawer.WearableActionDrawer;
 import android.support.wearable.view.drawer.WearableDrawerLayout;
@@ -24,8 +26,8 @@ public class MainActivity extends WearableActivity implements
         SensorEventListener,
         WearableActionDrawer.OnMenuItemClickListener{
 
-    private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
-            new SimpleDateFormat("hh:mm a", Locale.US);
+    private static final String KEY_PREF_IS_MILITARY_TIME = "KEY_PREF_IS_MILITARY_TIME";
+    private SimpleDateFormat mAmbientDateFormat;
     private static final long SHOW_DRAWER_TIME = 3000;
 
     private WearableDrawerLayout mContainerView;
@@ -37,6 +39,7 @@ public class MainActivity extends WearableActivity implements
     private Sensor mAccelerometer;
     private WearableActionDrawer mActionDrawer;
     private Handler mDrawerHandler;
+    private SharedPreferences mSharedPreferences;
 
     private float[] mMagneticData;
     private float[] mAccelerometerData;
@@ -54,6 +57,8 @@ public class MainActivity extends WearableActivity implements
 
         mDrawerHandler = new Handler();
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         mTextRotation = (TextView) findViewById(R.id.textView_rotation);
         mClockView = (TextView) findViewById(R.id.clock);
         mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
@@ -64,11 +69,27 @@ public class MainActivity extends WearableActivity implements
         mCompass = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        setMenuItems();
+
         mMagneticData = new float[3];
         mAccelerometerData = new float[3];
         mIdentityMatrix = new float[9];
         mRotationMatrix = new float[9];
         mOrientationMatrix = new float[3];
+    }
+
+    private void setMenuItems(){
+
+        MenuItem clockMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_clock_format);
+        if(mSharedPreferences.getBoolean("KEY_PREF_IS_MILITARY_TIME", false)){
+            clockMenuItem.setTitle("Ambient Clock 24h Mode");
+            mAmbientDateFormat =
+                    new SimpleDateFormat("HH:mm", Locale.US);
+        }else{
+            clockMenuItem.setTitle("Ambient Clock 12h Mode");
+            mAmbientDateFormat =
+                    new SimpleDateFormat("hh:mm a", Locale.US);
+        }
     }
 
     public void showDrawerHint(View view) {
@@ -106,6 +127,7 @@ public class MainActivity extends WearableActivity implements
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
+
         mSensorManager.unregisterListener(this);
         updateDisplay();
     }
@@ -132,7 +154,7 @@ public class MainActivity extends WearableActivity implements
             mCompassImage.setImageResource(R.drawable.ic_ambient_compass);
             mCompassImage.setRotation(0);
 
-            mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
+            mClockView.setText(mAmbientDateFormat.format(new Date()));
         } else {
             mContainerView.setBackgroundColor(Color.DKGRAY);
             mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
@@ -169,11 +191,15 @@ public class MainActivity extends WearableActivity implements
 
         switch (menuItem.getItemId()){
             case R.id.menu_clock_format:
+                boolean clockFormat = mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false);
+                mSharedPreferences.edit().putBoolean(KEY_PREF_IS_MILITARY_TIME, !clockFormat).apply();
+                setMenuItems();
                 break;
             case R.id.menu_close:
                 mActionDrawer.closeDrawer();
                 break;
         }
+        mActionDrawer.closeDrawer();
 
         return true;
     }
