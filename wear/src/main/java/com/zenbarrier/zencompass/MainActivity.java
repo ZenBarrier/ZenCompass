@@ -19,10 +19,10 @@ import java.util.Locale;
 public class MainActivity extends WearableActivity implements SensorEventListener{
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
-            new SimpleDateFormat("HH:mm", Locale.US);
+            new SimpleDateFormat("hh:mm a", Locale.US);
 
     private BoxInsetLayout mContainerView;
-    private TextView mTextView;
+    private TextView mTextRotation;
     private TextView mClockView;
     private ImageView mCompassImage;
     private SensorManager mSensorManager;
@@ -42,7 +42,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
-        mTextView = (TextView) findViewById(R.id.text);
+        mTextRotation = (TextView) findViewById(R.id.textView_rotation);
         mClockView = (TextView) findViewById(R.id.clock);
         mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
 
@@ -73,6 +73,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
+        mSensorManager.unregisterListener(this);
         updateDisplay();
     }
 
@@ -85,20 +86,25 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     public void onExitAmbient() {
         updateDisplay();
+        mSensorManager.registerListener(this, mCompass, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         super.onExitAmbient();
     }
 
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black, null));
-            mTextView.setTextColor(getResources().getColor(R.color.white, null));
             mClockView.setVisibility(View.VISIBLE);
+            mTextRotation.setVisibility(View.GONE);
+            mCompassImage.setImageResource(R.drawable.ic_ambient_compass);
+            mCompassImage.setRotation(0);
 
             mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
             mContainerView.setBackground(null);
-            mTextView.setTextColor(getResources().getColor(android.R.color.black, null));
+            mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             mClockView.setVisibility(View.GONE);
+            mTextRotation.setVisibility(View.VISIBLE);
         }
     }
 
@@ -117,7 +123,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         float rotationRadian = mOrientationMatrix[0];
         double mRotationDegrees = Math.toDegrees(rotationRadian);
         mCompassImage.setRotation((float) -mRotationDegrees);
-        mTextView.setText(String.valueOf((int)((mRotationDegrees >= 0 ? 0 : 360)+mRotationDegrees)));
+        mTextRotation.setText(String.valueOf((int)((mRotationDegrees >= 0 ? 0 : 360)+mRotationDegrees)));
     }
 
     @Override
