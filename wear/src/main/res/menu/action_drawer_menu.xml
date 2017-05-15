@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="" android:icon="@drawable/ic_mini_compass" android:id="@+id/menu_compass_pointer"/>
-    <item android:title="" android:icon="@drawable/ic_clipboard" android:id="@+id/menu_degree_show"/>
+    <item android:title="" android:icon="@drawable/ic_triangle" android:id="@+id/menu_degree_show"/>
     <item android:title="" android:icon="@drawable/ic_clock" android:id="@+id/menu_clock_format"/>
     <item android:title="@string/menu_close" android:icon="@drawable/ic_close" android:id="@+id/menu_close"/>
 
