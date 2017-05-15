@@ -176,15 +176,21 @@ public class MainActivity extends WearableActivity implements
             mClockView.setVisibility(View.VISIBLE);
             mTextRotation.setVisibility(View.GONE);
             mCompassImage.setImageResource(R.drawable.ic_ambient_compass);
+            mPointerImage.setVisibility(View.GONE);
             mCompassImage.setRotation(0);
 
             mClockView.setText(mAmbientDateFormat.format(new Date()));
         } else {
             mContainerView.setBackgroundColor(Color.DKGRAY);
-            mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             mClockView.setVisibility(View.GONE);
             if(mSharedPreferences.getBoolean(KEY_PREF_IS_SHOWING_DEGREES, false)) {
                 mTextRotation.setVisibility(View.VISIBLE);
+            }
+            if(mSharedPreferences.getBoolean(KEY_PREF_HAS_POINTER, false)) {
+                mPointerImage.setVisibility(View.VISIBLE);
+                mCompassImage.setImageResource(R.drawable.ic_compass_background_static);
+            }else{
+                mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             }
         }
     }
