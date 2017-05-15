@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,11 +86,11 @@ public class MainActivity extends WearableActivity implements
 
         MenuItem clockMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_clock_format);
         if(mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false)){
-            clockMenuItem.setTitle(R.string.menu_ambient_clock_24);
+            clockMenuItem.setTitle(R.string.menu_ambient_clock_12);
             mAmbientDateFormat =
                     new SimpleDateFormat("HH:mm", Locale.US);
         }else{
-            clockMenuItem.setTitle(R.string.menu_ambient_clock_12);
+            clockMenuItem.setTitle(R.string.menu_ambient_clock_24);
             mAmbientDateFormat =
                     new SimpleDateFormat("hh:mm a", Locale.US);
         }
