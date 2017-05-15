@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -219,7 +220,11 @@ public class MainActivity extends WearableActivity implements
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        if(sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW){
+            findViewById(R.id.imageView_calibrate).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.imageView_calibrate).setVisibility(View.GONE);
+        }
     }
 
     @Override

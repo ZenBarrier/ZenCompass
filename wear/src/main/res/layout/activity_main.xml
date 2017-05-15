@@ -32,14 +32,6 @@
         android:contentDescription="@string/description_compass_background" />
 
     <TextView
-        android:id="@+id/clock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@android:color/white"
-        app:layout_box="all" />
-
-    <TextView
         android:id="@+id/textView_rotation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,6 +39,26 @@
         android:textColor="@color/white"
         app:layout_box="all"
         tools:text="SW" />
+
+
+    <ImageView
+        android:id="@+id/imageView_calibrate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:onClick="showDrawerHint"
+        android:src="@drawable/ic_calibrate"
+        android:contentDescription="@string/description_compass_background" />
+
+    <TextView
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        app:layout_box="all" />
 
     <android.support.wearable.view.drawer.WearableActionDrawer
         android:id="@+id/bottom_action_drawer"
