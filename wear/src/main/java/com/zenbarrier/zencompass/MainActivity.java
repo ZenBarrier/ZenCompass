@@ -178,6 +178,7 @@ public class MainActivity extends WearableActivity implements
             mCompassImage.setImageResource(R.drawable.ic_ambient_compass);
             mPointerImage.setVisibility(View.GONE);
             mCompassImage.setRotation(0);
+            mActionDrawer.closeDrawer();
 
             mClockView.setText(mAmbientDateFormat.format(new Date()));
         } else {
