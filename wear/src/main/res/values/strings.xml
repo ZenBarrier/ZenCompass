@@ -3,4 +3,10 @@
     <string name="hello_world">Hello World!</string>
     <string name="description_compass_background">Compass Background</string>
     <string name="menu_close">Close Menu</string>
+    <string name="menu_ambient_clock_24">Ambient Clock 24h Mode</string>
+    <string name="menu_ambient_clock_12">Ambient Clock 12h Mode</string>
+    <string name="menu_hide_degrees">Hide Degrees</string>
+    <string name="menu_show_degrees">Show Degrees</string>
+    <string name="menu_hide_needle">Hide Compass Needle</string>
+    <string name="menu_show_needle">Show Compass Needle</string>
 </resources>

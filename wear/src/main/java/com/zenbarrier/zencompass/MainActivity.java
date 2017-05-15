@@ -86,33 +86,33 @@ public class MainActivity extends WearableActivity implements
 
         MenuItem clockMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_clock_format);
         if(mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false)){
-            clockMenuItem.setTitle("Ambient Clock 24h Mode");
+            clockMenuItem.setTitle(R.string.menu_ambient_clock_24);
             mAmbientDateFormat =
                     new SimpleDateFormat("HH:mm", Locale.US);
         }else{
-            clockMenuItem.setTitle("Ambient Clock 12h Mode");
+            clockMenuItem.setTitle(R.string.menu_ambient_clock_12);
             mAmbientDateFormat =
                     new SimpleDateFormat("hh:mm a", Locale.US);
         }
         MenuItem degreeMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_degree_show);
         if(mSharedPreferences.getBoolean(KEY_PREF_IS_SHOWING_DEGREES, false)){
-            degreeMenuItem.setTitle("Hide Degrees");
+            degreeMenuItem.setTitle(R.string.menu_hide_degrees);
             mTextRotation.setVisibility(View.VISIBLE);
         }else{
-            degreeMenuItem.setTitle("Show Degrees");
+            degreeMenuItem.setTitle(R.string.menu_show_degrees);
             mTextRotation.setVisibility(View.GONE);
         }
 
         MenuItem pointerMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_compass_pointer);
         if(mSharedPreferences.getBoolean(KEY_PREF_HAS_POINTER, false)){
-            pointerMenuItem.setTitle("Hide Compass Needle");
+            pointerMenuItem.setTitle(R.string.menu_hide_needle);
             mCompassImage.setImageResource(R.drawable.ic_compass_background_static);
             mPointerImage.setVisibility(View.VISIBLE);
             mCompassImage.setRotation(0);
         }else{
             mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
             mPointerImage.setVisibility(View.GONE);
-            pointerMenuItem.setTitle("Show Compass Needle");
+            pointerMenuItem.setTitle(R.string.menu_show_needle);
         }
     }
 
