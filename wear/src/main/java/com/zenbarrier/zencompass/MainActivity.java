@@ -220,7 +220,7 @@ public class MainActivity extends WearableActivity implements
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        if(sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD && accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW){
+        if(accuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW){
             findViewById(R.id.imageView_calibrate).setVisibility(View.VISIBLE);
         }else{
             findViewById(R.id.imageView_calibrate).setVisibility(View.GONE);
