@@ -20,6 +20,16 @@
         android:onClick="showDrawerHint"
         android:src="@drawable/ic_compass_background_rotate"
         android:contentDescription="@string/description_compass_background" />
+    <ImageView
+        android:id="@+id/imageView_pointer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:onClick="showDrawerHint"
+        android:src="@drawable/ic_compass_pointer"
+        android:contentDescription="@string/description_compass_background" />
 
     <TextView
         android:id="@+id/clock"

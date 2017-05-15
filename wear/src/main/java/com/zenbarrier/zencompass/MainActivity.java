@@ -28,6 +28,7 @@ public class MainActivity extends WearableActivity implements
 
     private static final String KEY_PREF_IS_MILITARY_TIME = "KEY_PREF_IS_MILITARY_TIME";
     private static final String KEY_PREF_IS_SHOWING_DEGREES = "KEY_PREF_IS_SHOWING_DEGREES";
+    private static final String KEY_PREF_HAS_POINTER = "KEY_PREF_HAS_POINTER";
     private SimpleDateFormat mAmbientDateFormat;
     private static final long SHOW_DRAWER_TIME = 3000;
 
@@ -35,6 +36,7 @@ public class MainActivity extends WearableActivity implements
     private TextView mTextRotation;
     private TextView mClockView;
     private ImageView mCompassImage;
+    private ImageView mPointerImage;
     private SensorManager mSensorManager;
     private Sensor mCompass;
     private Sensor mAccelerometer;
@@ -63,6 +65,7 @@ public class MainActivity extends WearableActivity implements
         mTextRotation = (TextView) findViewById(R.id.textView_rotation);
         mClockView = (TextView) findViewById(R.id.clock);
         mCompassImage = (ImageView) findViewById(R.id.imageView_compass);
+        mPointerImage = (ImageView) findViewById(R.id.imageView_pointer);
         mActionDrawer = (WearableActionDrawer) findViewById(R.id.bottom_action_drawer);
         mActionDrawer.setOnMenuItemClickListener(this);
 
@@ -98,6 +101,18 @@ public class MainActivity extends WearableActivity implements
         }else{
             degreeMenuItem.setTitle("Show Degrees");
             mTextRotation.setVisibility(View.GONE);
+        }
+
+        MenuItem pointerMenuItem = mActionDrawer.getMenu().findItem(R.id.menu_compass_pointer);
+        if(mSharedPreferences.getBoolean(KEY_PREF_HAS_POINTER, false)){
+            pointerMenuItem.setTitle("Hide Compass Needle");
+            mCompassImage.setImageResource(R.drawable.ic_compass_background_static);
+            mPointerImage.setVisibility(View.VISIBLE);
+            mCompassImage.setRotation(0);
+        }else{
+            mCompassImage.setImageResource(R.drawable.ic_compass_background_rotate);
+            mPointerImage.setVisibility(View.GONE);
+            pointerMenuItem.setTitle("Show Compass Needle");
         }
     }
 
@@ -188,7 +203,11 @@ public class MainActivity extends WearableActivity implements
         SensorManager.getOrientation(mRotationMatrix, mOrientationMatrix);
         float rotationRadian = mOrientationMatrix[0];
         double mRotationDegrees = Math.toDegrees(rotationRadian);
-        mCompassImage.setRotation((float) -mRotationDegrees);
+        if(mSharedPreferences.getBoolean(KEY_PREF_HAS_POINTER, false)) {
+            mPointerImage.setRotation((float) -mRotationDegrees);
+        }else{
+            mCompassImage.setRotation((float) -mRotationDegrees);
+        }
         mTextRotation.setText(String.valueOf((int)((mRotationDegrees >= 0 ? 0 : 360)+mRotationDegrees)));
     }
 
@@ -201,6 +220,11 @@ public class MainActivity extends WearableActivity implements
     public boolean onMenuItemClick(MenuItem menuItem) {
 
         switch (menuItem.getItemId()){
+            case R.id.menu_compass_pointer:
+                boolean hasPointer = mSharedPreferences.getBoolean(KEY_PREF_HAS_POINTER, false);
+                mSharedPreferences.edit().putBoolean(KEY_PREF_HAS_POINTER, !hasPointer).apply();
+                setMenuItems();
+                break;
             case R.id.menu_clock_format:
                 boolean clockFormat = mSharedPreferences.getBoolean(KEY_PREF_IS_MILITARY_TIME, false);
                 mSharedPreferences.edit().putBoolean(KEY_PREF_IS_MILITARY_TIME, !clockFormat).apply();
